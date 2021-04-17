@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>[ c l o c k ]</title>
+    <link rel="icon" href="https://codehs.com/uploads/2b0f3851a1f67afb35ce8fcf4fd18314">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=DotGothic16&family=Lora&family=Roboto&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+    body {
+        background-color:rgb(34, 34, 36);
+        margin:0px;
+        overflow:hidden;
+        color:rgb(227, 224, 222);
+        text-shadow:2px 2px rgba(227, 224, 222, 0.4);
+        font-family: 'Roboto Mono', monospace;
+    }
+    #m {
+        font-size:60px;
+        position:absolute;
+        bottom:0;
+        left:50px;
+    }
+    #c {
+        font-size:30px;
+        position:absolute;
+        top:0;
+        left:50px;
+    }
+    .s, #a {
+        font-size:20px;
+        display:inline-block;
+        padding-left:50px;
+        cursor:pointer;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    #a {
+        padding-bottom:10px;
+        padding-left:0px;
+        margin-left:50px;
+    }
+    #md {
+        position:relative;
+        height:40vh;
+    }
+    #cd {
+        position:relative;
+        height:30vh;
+    }
+    #sd {
+        position:relative;
+        height:30vh;
+        transform:translateY(calc(30vh - 40px));
+        -webkit-transition: transform 400ms ease-out;
+        -moz-transition: transform 400ms ease-out;
+        -o-transition: transform 400ms ease-out;
+        transition: transform 400ms ease-out;
+    }
+    </style>
+</head>
+<body id="body">
+    <div id="md">
+    <t id="m">[current time]</t>
+    </div>
+    <div id="cd">
+    <t id="c">[class times]</t>
+    </div>
+    <div id="sd">
+    <t id="a">∧</t>
+    <br>
+    <div class="s"><t id="fontbtn">Font: </t></div>
+    <div class="s"><t id="themebtn">Theme: </t></div>
+    </div>
+    <script src="ccapi.js"></script>
+    <script>
+    //setup
+    var api = new ccapi(
+    {"2020-2021":{"Sunday":[{"name":"At home","start":"0:00","end":"24:60"}],"Monday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"1st period","start":"7:45","end":"9:05"},{"name":"3rd period","start":"9:10","end":"10:35"},{"name":"5th period","start":"10:40","end":"12:00"},{"name":"7th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Tuesday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"2nd period","start":"7:45","end":"9:05"},{"name":"4th period","start":"9:10","end":"10:35"},{"name":"6th period","start":"10:40","end":"12:00"},{"name":"8th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Wednesday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"1st period","start":"7:45","end":"9:05"},{"name":"3rd period","start":"9:10","end":"10:35"},{"name":"5th period","start":"10:40","end":"12:00"},{"name":"7th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Thursday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"2nd period","start":"7:45","end":"9:05"},{"name":"4th period","start":"9:10","end":"10:35"},{"name":"6th period","start":"10:40","end":"12:00"},{"name":"8th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Friday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"1st Asynchronous","start":"7:45","end":"8:35"},{"name":"2nd Asynchronous","start":"8:40","end":"9:30"},{"name":"3rd Asynchronous","start":"9:35","end":"10:25"},{"name":"4th Asynchronous","start":"10:30","end":"11:20"},{"name":"5th Asynchronous","start":"11:25","end":"12:15"},{"name":"6th Asynchronous","start":"12:20","end":"13:10"},{"name":"7th Asynchronous","start":"13:15","end":"14:05"},{"name":"8th Asynchronous","start":"14:10","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Saturday":[{"name":"At home","start":"0:00","end":"24:60"}]}},
+    "2020-2021"
+    );
+    api.onBell = bellHandle;
+    setTimeout(function(){updateColors(getCookie("Theme"))},100); //needs to wait for json to load, for some reason
+    
+    update();
+    setInterval(update,200);
+    function update() { //update time
+        let timet = "It's "+api.getTime("p")+", "+api.getDate();
+        if (timet!=document.getElementById("m").innerHTML) {
+            document.getElementById("m").innerHTML=timet;
+        }
+        let classt = api.getClass()+" until "+api.getClass(true).end+", "+api.getNextClass()+" starts at "+api.getNextClass(true).start;
+        if (api.getClass(true).name=="Empty") {
+            classt="Passing!";
+        } else if (api.getClass(true).end=="24:60") {
+            classt="Relax, you're done for the day!";
+        }
+        if (classt!=document.getElementById("c").innerHTML) {
+            document.getElementById("c").innerHTML=classt;
+        }
+    }
+    function bellHandle() {
+        alert('Ring!');
+    }
+    
+    document.getElementById("a").addEventListener("mousedown",function() { // arrow click
+        if (document.getElementById("sd").style.transform!="translateY(0px)") {
+            document.getElementById("sd").style.transform="translateY(0px)";
+        } else {
+            document.getElementById("sd").style.transform="translateY(calc(30vh - 40px))";
+        }
+    });
+    document.getElementById("fontbtn").addEventListener("mousedown",function() { // font change button
+        if (this.innerHTML=="Font: Mono") {
+            this.innerHTML = "Font: Pixely";
+                document.body.style.fontFamily="'DotGothic16', sans-serif";
+        } else if (this.innerHTML=="Font: Pixely") {
+            this.innerHTML = "Font: Serif";
+            document.body.style.fontFamily="'Lora', serif";
+        } else if (this.innerHTML=="Font: Serif") {
+            this.innerHTML = "Font: Sans-Serif";
+            document.body.style.fontFamily="'Roboto', sans-serif";
+        } else if (this.innerHTML=="Font: Sans-Serif") {
+            this.innerHTML = "Font: Handwriting";
+            document.body.style.fontFamily="'Amatic SC', cursive";
+        } else if (this.innerHTML=="Font: Handwriting") {
+            this.innerHTML = "Font: Mono";
+            document.body.style.fontFamily="'Roboto Mono', monospace";
+        }
+    });
+    document.getElementById("themebtn").addEventListener("mousedown",function() { // theme change
+        updateColors();
+    });
+    var themekey = ["Chalkboard","Polar","Dust","Bionicle","Dark Oak","Banana","Shrub","Blue Raspberry","Grape","Leather"];
+    var themes = {"Chalkboard":{"bgc":"34, 34, 36","tc":"227, 224, 222"},"Polar":{"bgc":"254, 253, 252","tc":"153, 138, 138"},"Dust":{"bgc":"192, 198, 202","tc":"129, 127, 125"},"Bionicle":{"bgc":"21, 25, 28","tc":"213, 53, 61"},"Dark Oak":{"bgc":"50, 26, 4","tc":"255, 132, 12"},"Banana":{"bgc":"255, 235, 84","tc":"46, 48, 54"},"Shrub":{"bgc":"41, 96, 87","tc":"17, 190, 34"},"Blue Raspberry":{"bgc":"7, 102, 140","tc":"101, 223, 235"},"Grape":{"bgc":"53, 42, 86","tc":"142, 131, 198"},"Leather":{"bgc":"80, 60, 42","tc":"173, 144, 92"}};
+    function updateColors(type) {// theme update
+        if (!type) {
+            try{
+            type = themekey[(themekey.indexOf(document.getElementById("themebtn").innerHTML.replace("Theme: ",""))+1)%themekey.length];
+            }catch{type="Chalkboard";}
+        }
+        document.getElementById("themebtn").innerHTML = "Theme: "+type;
+        document.body.style.backgroundColor = "rgb("+themes[type].bgc+")";
+        document.body.style.color = "rgb("+themes[type].tc+")";
+        document.body.style.textShadow = "2px 2px rgba("+themes[type].tc+", 0.4)";
+        //setCookie("Theme",type,180);
+    }
+    //cookies
+    function getCookie(name) {
+        var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return v ? v[2] : null;
+    }
+    function setCookie(name, value, days) {
+        var d = new Date;
+        d.setTime(d.getTime() + 24*60*60*1000*days);
+        document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
+    }
+    function deleteCookie(name) {
+        setCookie(name, '', -1);
+    }
+    </script>
+</body>
+</html>
