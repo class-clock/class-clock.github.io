@@ -4,7 +4,8 @@
     <title>[ c l o c k ]</title>
     <link rel="icon" href="https://codehs.com/uploads/2b0f3851a1f67afb35ce8fcf4fd18314">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=DotGothic16&family=Lora&family=Roboto&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=DotGothic16&family=Lora&family=Fredoka+One&display&family=Roboto&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <style>
     body {
         background-color:rgb(34, 34, 36);
@@ -83,7 +84,10 @@
     "2020-2021"
     );
     api.onBell = bellHandle;
-    setTimeout(function(){updateColors(getCookie("Theme"))},100); //needs to wait for json to load, for some reason
+    setTimeout(function(){
+        updateColors(getCookie("Theme"));
+        updateFonts(getCookie("Font"));
+    },100); //needs to wait for json to load, for some reason
     
     update();
     setInterval(update,200);
@@ -113,29 +117,28 @@
             document.getElementById("sd").style.transform="translateY(calc(30vh - 40px))";
         }
     });
+    
+    var fontkey = ["Mono","Pixely","Serif","Sans-Serif","Handwriting","Cookie"];
+    var fonts = {"Mono": "'Roboto Mono', monospace","Pixely": "'DotGothic16', sans-serif","Serif": "'Lora', serif","Sans-Serif": "'Roboto', sans-serif","Handwriting": "'Amatic SC', cursive","Cookie":"'Fredoka One', cursive"};
     document.getElementById("fontbtn").addEventListener("mousedown",function() { // font change button
-        if (this.innerHTML=="Font: Mono") {
-            this.innerHTML = "Font: Pixely";
-                document.body.style.fontFamily="'DotGothic16', sans-serif";
-        } else if (this.innerHTML=="Font: Pixely") {
-            this.innerHTML = "Font: Serif";
-            document.body.style.fontFamily="'Lora', serif";
-        } else if (this.innerHTML=="Font: Serif") {
-            this.innerHTML = "Font: Sans-Serif";
-            document.body.style.fontFamily="'Roboto', sans-serif";
-        } else if (this.innerHTML=="Font: Sans-Serif") {
-            this.innerHTML = "Font: Handwriting";
-            document.body.style.fontFamily="'Amatic SC', cursive";
-        } else if (this.innerHTML=="Font: Handwriting") {
-            this.innerHTML = "Font: Mono";
-            document.body.style.fontFamily="'Roboto Mono', monospace";
-        }
+        updateFonts();
     });
+    function updateFonts(type) {
+        if (!type) {
+            try{
+            type = fontkey[(fontkey.indexOf(document.getElementById("fontbtn").innerHTML.replace("Font: ",""))+1)%fontkey.length];
+            }catch{type="Mono";}
+        }
+        document.getElementById("fontbtn").innerHTML = "Font: "+type;
+        document.body.style.fontFamily=fonts[type];
+        setCookie("Font",type,180);
+    }
+    
+    var themekey = ["Chalkboard","Polar","Dust","Bionicle","Dark Oak","Banana","Shrub","Blue Raspberry","Grape","Leather"];
+    var themes = {"Chalkboard":{"bgc":"34, 34, 36","tc":"227, 224, 222"},"Polar":{"bgc":"254, 253, 252","tc":"153, 138, 138"},"Dust":{"bgc":"192, 198, 202","tc":"129, 127, 125"},"Bionicle":{"bgc":"21, 25, 28","tc":"213, 53, 61"},"Dark Oak":{"bgc":"50, 26, 4","tc":"255, 132, 12"},"Banana":{"bgc":"255, 235, 84","tc":"46, 48, 54"},"Shrub":{"bgc":"41, 96, 87","tc":"17, 190, 34"},"Blue Raspberry":{"bgc":"7, 102, 140","tc":"101, 223, 235"},"Grape":{"bgc":"53, 42, 86","tc":"142, 131, 198"},"Leather":{"bgc":"80, 60, 42","tc":"173, 144, 92"}};
     document.getElementById("themebtn").addEventListener("mousedown",function() { // theme change
         updateColors();
     });
-    var themekey = ["Chalkboard","Polar","Dust","Bionicle","Dark Oak","Banana","Shrub","Blue Raspberry","Grape","Leather"];
-    var themes = {"Chalkboard":{"bgc":"34, 34, 36","tc":"227, 224, 222"},"Polar":{"bgc":"254, 253, 252","tc":"153, 138, 138"},"Dust":{"bgc":"192, 198, 202","tc":"129, 127, 125"},"Bionicle":{"bgc":"21, 25, 28","tc":"213, 53, 61"},"Dark Oak":{"bgc":"50, 26, 4","tc":"255, 132, 12"},"Banana":{"bgc":"255, 235, 84","tc":"46, 48, 54"},"Shrub":{"bgc":"41, 96, 87","tc":"17, 190, 34"},"Blue Raspberry":{"bgc":"7, 102, 140","tc":"101, 223, 235"},"Grape":{"bgc":"53, 42, 86","tc":"142, 131, 198"},"Leather":{"bgc":"80, 60, 42","tc":"173, 144, 92"}};
     function updateColors(type) {// theme update
         if (!type) {
             try{
@@ -148,6 +151,7 @@
         document.body.style.textShadow = "2px 2px rgba("+themes[type].tc+", 0.4)";
         setCookie("Theme",type,180);
     }
+    
     //cookies
     function getCookie(name) {
         var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
