@@ -2,6 +2,7 @@ function ccapi(schedule,type) {
     // initiations
     this.schedule = schedule;
     this.type = type;
+    this.lastClass = "";
     this.recentChange = true;
     
     // fixed values
@@ -37,8 +38,9 @@ function ccapi(schedule,type) {
         }
     };
     this.getClass = function(obj) { // obj=true to return full object
+    try{
         let current;
-        for (current of this.schedule[type][this.days[this.day]]) {
+        for (current of this.schedule[this.type][this.days[this.day]]) {
             if (this.timeGreater(this.getTime("m"),current.start) && this.timeLesser(this.getTime("m"),current.end)) {
                 if (obj===true) {
                     return(current);
@@ -48,9 +50,10 @@ function ccapi(schedule,type) {
             }
         }
         return({"name":"Empty"});
+    }catch(e){alert(this.type);}
     };
     this.getNextClass = function(obj) { // obj=true to return full object
-        let ar = this.schedule[type][this.days[this.day]];
+        let ar = this.schedule[this.type][this.days[this.day]];
         for (let i=0;i<ar.length;i++) {
             if (this.timeGreater(this.getTime("m"),ar[i].start) && this.timeLesser(this.getTime("m"),ar[i].end)) {
                 if (obj===true) {
@@ -68,7 +71,11 @@ function ccapi(schedule,type) {
                 }
             }
         }
-        return({"name":"Empty"});
+        if (obj===true) {
+            return({"name":"Empty"});
+        } else {
+            return("Empty");
+        }
     };
     // working functions
     this.updateTime = function() {
@@ -77,6 +84,14 @@ function ccapi(schedule,type) {
         this.hour = this.date.getHours();
         this.minute = this.date.getMinutes();
         this.second = this.date.getSeconds();
+    };
+    this.checkBell = function() {
+        let doBell = this.lastClass!=this.getClass(true).name && this.recentChange===false;
+        if (this.lastClass!=this.getClass(true).name) {
+            this.lastClass=this.getClass(true).name;
+        }
+        this.recentChange=false;
+        return(doBell);
     };
     this.timeGreater = function(t1,t2) { // true if 1>=2
         return(parseInt(t1.split(":")[0])>parseInt(t2.split(":")[0])||parseInt(t1.split(":")[0])==parseInt(t2.split(":")[0]) && parseInt(t1.split(":")[1])>=parseInt(t2.split(":")[1]));
@@ -97,5 +112,4 @@ function ccapi(schedule,type) {
         }
         return(out);
     };
-    this.onBell = function(){}; // do nothing if onBell is not set
 }
