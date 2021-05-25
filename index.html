@@ -80,11 +80,12 @@
     <div id="sd">
     <t id="a">∧</t>
     <br>
-    <div class="s"><t id="fontbtn">Font: </t></div>
-    <div class="s"><t id="themebtn">Theme: </t></div>
-    <div class="s"><t id="shadowbtn">Shadow: </t></div>
-    <div class="s"><t id="schoolbtn">School: </t></div>
-    <div class="s"><t id="schedulebtn">Schedule: </t></div>
+    <div class="s"><t id="fontbtn" onclick="updateFonts()">Font: </t></div>
+    <div class="s"><t id="themebtn" onclick="updateColors()">Theme: </t></div>
+    <div class="s"><t id="shadowbtn" onclick="updateShadows()">Shadow: </t></div>
+    <div class="s"><t id="schoolbtn" onclick="updateSchools()">School: </t></div>
+    <div class="s"><t id="schedulebtn" onclick="updateSchedule()">Schedule: </t></div>
+    <div class="s"><t id="bellbtn" onclick="updateBell()">Bell: </t></div>
     </div>
     <script src="ccapi.js"></script>
     <script src="holders.js"></script>
@@ -104,8 +105,10 @@
         updateFonts(getCookie("Font"));
         updateShadows(getCookie("Shadow"));
         updateSchools(getCookie("School"));
+        updateBell(getCookie("Bell"));
     },100); //needs to wait for json to load, for some reason
     var bell = new Audio('bell.mp3');
+    var bellShouldPlay;
     
     update();
     setInterval(update,200);
@@ -126,7 +129,7 @@
         if (classt!=document.getElementById("c").innerHTML) {
             document.getElementById("c").innerHTML=classt;
         }
-        if (api.checkBell()) {
+        if (api.checkBell()===true && bellShouldPlay===true) {
             bell.play();
         }
     }
@@ -147,9 +150,6 @@
     
     var fontkey = ["Mono","Pixely","Serif","Sans-Serif","Handwriting","Cookie"];
     var fonts = {"Mono": "'Roboto Mono', monospace","Pixely": "'DotGothic16', sans-serif","Serif": "'Lora', serif","Sans-Serif": "'Roboto', sans-serif","Handwriting": "'Amatic SC', cursive","Cookie":"'Fredoka One', cursive"};
-    document.getElementById("fontbtn").addEventListener("mousedown",function() { // font change button
-        updateFonts();
-    });
     function updateFonts(type) {
         if (!type) {
             try{
@@ -165,9 +165,6 @@
     
     var themekey = ["Chalkboard","Polar","Dust","Bionicle","Dark Oak","Banana","Shrub","Blue Raspberry","Grape","Leather"];
     var themes = {"Chalkboard":{"bgc":"34, 34, 36","tc":"227, 224, 222"},"Polar":{"bgc":"254, 253, 252","tc":"153, 138, 138"},"Dust":{"bgc":"192, 198, 202","tc":"129, 127, 125"},"Bionicle":{"bgc":"21, 25, 28","tc":"213, 53, 61"},"Dark Oak":{"bgc":"50, 26, 4","tc":"255, 132, 12"},"Banana":{"bgc":"255, 235, 84","tc":"46, 48, 54"},"Shrub":{"bgc":"41, 96, 87","tc":"17, 190, 34"},"Blue Raspberry":{"bgc":"7, 102, 140","tc":"101, 223, 235"},"Grape":{"bgc":"53, 42, 86","tc":"142, 131, 198"},"Leather":{"bgc":"80, 60, 42","tc":"173, 144, 92"}};
-    document.getElementById("themebtn").addEventListener("mousedown",function() { // theme change
-        updateColors();
-    });
     function updateColors(type) {// theme update
         if (!type) {
             try{
@@ -204,9 +201,6 @@
     });
     
     var shadowkey = ["2px","4px","8px","0px"];
-    document.getElementById("shadowbtn").addEventListener("mousedown",function() { // shadow change
-        updateShadows();
-    });
     function updateShadows(type) {// shadow update
         if (!type) {
             try{
@@ -221,9 +215,6 @@
     }
     
     var schoolkey = ["Arvada West HS","Arvada HS","Ralston Valley HS","Pomona HS","Manning MS","Everitt MS","Moore MS","Oberon MS","Drake MS","North Arvada MS"];
-    document.getElementById("schoolbtn").addEventListener("mousedown",function() { // school change
-        updateSchools();
-    });
     function updateSchools(type) {// school update
         if (!type) {
             try{
@@ -240,9 +231,6 @@
     }
     
     var schedulekey = [];
-    document.getElementById("schedulebtn").addEventListener("mousedown",function() { // school change
-        updateSchedule();
-    });
     function updateSchedule(type) {// school update
         schedulekey = Object.keys(api.schedule);
         if (!type) {
@@ -255,6 +243,17 @@
         api.type = type;
         document.getElementById("schedulebtn").innerHTML = "Schedule: "+type;
         setCookie("Schedule",type,180);
+    }
+    function updateBell(type) {
+        if (type && [true,false].indexOf(type)!=-1) {
+            bellShouldPlay = type;
+        } else if (bellShouldPlay===true) {
+            bellShouldPlay = false;
+        } else {
+            bellShouldPlay = true;
+        }
+        document.getElementById("bellbtn").innerHTML = "Bell: "+(bellShouldPlay ? "On":"Off");
+        setCookie("Bell",bellShouldPlay,180);
     }
     
     //cookies
