@@ -38,7 +38,6 @@ function ccapi(schedule,type) {
         }
     };
     this.getClass = function(obj) { // obj=true to return full object
-    try{
         let current;
         for (current of this.schedule[this.type][this.days[this.day]]) {
             if (this.timeGreater(this.getTime("m"),current.start) && this.timeLesser(this.getTime("m"),current.end)) {
@@ -50,24 +49,15 @@ function ccapi(schedule,type) {
             }
         }
         return({"name":"Empty"});
-    }catch(e){alert(this.type);}
     };
     this.getNextClass = function(obj) { // obj=true to return full object
         let ar = this.schedule[this.type][this.days[this.day]];
         for (let i=0;i<ar.length;i++) {
-            if (this.timeGreater(this.getTime("m"),ar[i].start) && this.timeLesser(this.getTime("m"),ar[i].end)) {
+            if (this.timeLesser(this.getTime("m"),ar[i].start)) {
                 if (obj===true) {
-                    if (i==ar.length-1) {
-                        return({"name":"Empty"});
-                    } else {
-                        return(ar[i+1]);
-                    }
+                    return(ar[i]);
                 } else {
-                    if (i==ar.length-1) {
-                        return("Empty");
-                    } else {
-                        return(ar[i+1].name);
-                    }
+                    return(ar[i].name);
                 }
             }
         }
