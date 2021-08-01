@@ -94,11 +94,12 @@
     <div class="s"><t id="themebtn" onclick="updateColors()">Theme: </t></div>
     <div class="s"><t id="shadowbtn" onclick="updateShadows()">Shadow: </t></div>
     <div class="s"><t id="wallpaperbtn" onclick="document.getElementById('wallpaperupload').click()">Set Wallpaper</t></div>
-    <div class="s"><t id="wallpaperbtn" onclick="updateWallpaper('')">Remove Wallpaper</t></div>
+    <div class="s"><t id="unwallpaperbtn" onclick="updateWallpaper('')">Remove Wallpaper</t></div>
     <input onchange="updateWallpaper(this)" type="file" accept="image/png, image/gif, image/jpeg" id="wallpaperupload">
     </div>
     <script src="ccapi.js"></script>
     <script src="holders.js"></script>
+    <script id="lzutf8" src="https://cdn.jsdelivr.net/npm/lzutf8/build/production/lzutf8.js"></script>
     <script>
     //init vars
     var api = new ccapi(
@@ -116,15 +117,15 @@
     var is24;
     var bell = new Audio('bell.mp3');
     var bellShouldPlay;
-    //collect cookies
+    //collect localstorage
     setTimeout(function(){
-        updateColors(getCookie("Theme"));
-        updateFonts(getCookie("Font"));
-        updateShadows(getCookie("Shadow"));
-        updateSchools(getCookie("School"));
-        updateBell(getCookie("Bell"));
-        updateFormat(getCookie("Format"));
-        updateWallpaper(getCookie("Wallpaper"));
+        updateColors(localStorage.getItem("Theme"));
+        updateFonts(localStorage.getItem("Font"));
+        updateShadows(localStorage.getItem("Shadow"));
+        updateSchools(localStorage.getItem("School"));
+        updateBell(localStorage.getItem("Bell"));
+        updateFormat(localStorage.getItem("Format"));
+        updateWallpaper(localStorage.getItem("Wallpaper"));
     },100); //needs to wait for json to load, for some reason
     
     update();
@@ -193,7 +194,7 @@
             const reader = new FileReader();
             reader.addEventListener("load", function () {
                 document.body.style.backgroundImage = "url("+reader.result+")";
-                setCookie("Wallpaper",reader.result,180);
+                localStorage.setItem("Wallpaper", reader.result);
             }, false);
             if (url.files[0]) {
                 reader.readAsDataURL(url.files[0]);
@@ -202,7 +203,7 @@
             document.body.style.backgroundImage = "url("+url+")";
         } else if (url=='') {
             document.body.style.backgroundImage = "";
-            setCookie("Wallpaper",'',180);
+            localStorage.setItem("Wallpaper", '');
         }
     }
     function updateFonts(type) {
@@ -215,7 +216,7 @@
         }
         document.getElementById("fontbtn").innerHTML = "Font: "+type;
         document.body.style.fontFamily=fonts[type];
-        setCookie("Font",type,180);
+        localStorage.setItem("Font",type);
     }
     function updateColors(type) {// theme update
         if (!type) {
@@ -230,7 +231,7 @@
         document.body.style.color = "rgb("+themes[type].tc+")";
         document.body.style.textShadow = "var(--shadow-depth) var(--shadow-depth) rgba("+themes[type].tc+", 0.4)";
         document.getElementById('dynamic-favicon').href="icons/"+type.split(" ").join("_")+".png";
-        setCookie("Theme",type,180);
+        localStorage.setItem("Theme",type);
     }
     function updateShadows(type) {// shadow update
         if (!type) {
@@ -242,7 +243,7 @@
         }
         document.getElementById("shadowbtn").innerHTML = "Shadow: "+type;
         document.body.style.setProperty('--shadow-depth',type);
-        setCookie("Shadow",type,180);
+        localStorage.setItem("Shadow",type);
     }
     function updateSchools(type) {// school update
         if (!type) {
@@ -255,8 +256,8 @@
         document.getElementById("schoolbtn").innerHTML = "School: "+type;
         api.schedule = getSchedule(type);
         api.recentChange = true;
-        updateSchedule(getCookie("Schedule"));
-        setCookie("School",type,180);
+        updateSchedule(localStorage.getItem("Schedule"));
+        localStorage.setItem("School",type);
     }
     function updateSchedule(type) {// school update
         schedulekey = Object.keys(api.schedule);
@@ -269,7 +270,7 @@
         }
         api.type = type;
         document.getElementById("schedulebtn").innerHTML = "Schedule: "+type;
-        setCookie("Schedule",type,180);
+        localStorage.setItem("Schedule",type);
     }
     function updateBell(type) {
         if (type && [true,false].indexOf(type)!=-1) {
@@ -280,7 +281,7 @@
             bellShouldPlay = true;
         }
         document.getElementById("bellbtn").innerHTML = "Bell: "+(bellShouldPlay ? "On":"Off");
-        setCookie("Bell",bellShouldPlay,180);
+        localStorage.setItem("Bell",bellShouldPlay);
     }
     function updateFormat(type) {
         if (!type) {
@@ -295,20 +296,7 @@
             is24=false;
         }
         document.getElementById("formatbtn").innerHTML = "Format: "+(is24 ? "24 Hour" : "12 Hour");
-        setCookie("Format",is24,180);
-    }
-    //cookies
-    function getCookie(name) {
-        var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        return v ? v[2] : null;
-    }
-    function setCookie(name, value, days) {
-        var d = new Date;
-        d.setTime(d.getTime() + 24*60*60*1000*days);
-        document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
-    }
-    function deleteCookie(name) {
-        setCookie(name, '', -1);
+        localStorage.setItem("Format",is24);
     }
     </script>
 </body>
