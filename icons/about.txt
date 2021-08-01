@@ -1,0 +1,1 @@
+place favicons in this folder, they should be named Theme_Name.png
