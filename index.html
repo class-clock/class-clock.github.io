@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -123,8 +122,8 @@
         updateFonts(localStorage.getItem("Font"));
         updateShadows(localStorage.getItem("Shadow"));
         updateSchools(localStorage.getItem("School"));
-        updateBell(localStorage.getItem("Bell"));
-        updateFormat(localStorage.getItem("Format"));
+        updateBell(localStorage.getItem("Bell")=='true');
+        updateFormat(localStorage.getItem("Format")=='true');
         updateWallpaper(localStorage.getItem("Wallpaper"));
     },100); //needs to wait for json to load, for some reason
     
@@ -140,7 +139,7 @@
         // next
         let classt = api.getClass()+" until "+api.getClass(true).end+", "+api.getNextClass()+" starts at "+api.getNextClass(true).start;
         if (api.getClass(true).name=="Empty") {
-            classt="Passing!";
+            classt="Passing! Go to "+api.getNextClass()+".";
         } else if (api.getClass(true).end=="24:60") {
             classt="Relax, you're done for the day!";
         }
@@ -207,7 +206,7 @@
         }
     }
     function updateFonts(type) {
-        if (!type) {
+        if (type===undefined) {
             try{
             type = fontkey[(fontkey.indexOf(document.getElementById("fontbtn").innerHTML.replace("Font: ",""))+1)%fontkey.length];
             }catch{type=fontkey[0];}
@@ -219,7 +218,7 @@
         localStorage.setItem("Font",type);
     }
     function updateColors(type) {// theme update
-        if (!type) {
+        if (type===undefined) {
             try{
             type = themekey[(themekey.indexOf(document.getElementById("themebtn").innerHTML.replace("Theme: ",""))+1)%themekey.length];
             }catch{type=themekey[0];}
@@ -234,7 +233,7 @@
         localStorage.setItem("Theme",type);
     }
     function updateShadows(type) {// shadow update
-        if (!type) {
+        if (type===undefined) {
             try{
             type = shadowkey[(shadowkey.indexOf(document.getElementById("shadowbtn").innerHTML.replace("Shadow: ",""))+1)%shadowkey.length];
             }catch{type=shadowkey[0];}
@@ -246,7 +245,7 @@
         localStorage.setItem("Shadow",type);
     }
     function updateSchools(type) {// school update
-        if (!type) {
+        if (type===undefined) {
             try{
             type = schoolkey[(schoolkey.indexOf(document.getElementById("schoolbtn").innerHTML.replace("School: ",""))+1)%schoolkey.length];
             }catch{type=schoolkey[0];}
@@ -261,19 +260,20 @@
     }
     function updateSchedule(type) {// school update
         schedulekey = Object.keys(api.schedule);
-        if (!type) {
+        if (type===undefined) {
             try{
             type = schedulekey[(schedulekey.indexOf(document.getElementById("schedulebtn").innerHTML.replace("Schedule: ",""))+1)%schedulekey.length];
             }catch{type="";}
         } else if (schedulekey.indexOf(type)==-1) { // ok
             type = schedulekey[0];
         }
+        api.recentChange = true;
         api.type = type;
         document.getElementById("schedulebtn").innerHTML = "Schedule: "+type;
         localStorage.setItem("Schedule",type);
     }
     function updateBell(type) {
-        if (type && [true,false].indexOf(type)!=-1) {
+        if (type!==undefined && [true,false].indexOf(type)!=-1) {
             bellShouldPlay = type;
         } else if (bellShouldPlay===true) {
             bellShouldPlay = false;
@@ -281,10 +281,10 @@
             bellShouldPlay = true;
         }
         document.getElementById("bellbtn").innerHTML = "Bell: "+(bellShouldPlay ? "On":"Off");
-        localStorage.setItem("Bell",bellShouldPlay);
+        localStorage.setItem("Bell",bellShouldPlay.toString());
     }
     function updateFormat(type) {
-        if (!type) {
+        if (type===undefined) {
             if (is24===false) {
                 is24=true;
             } else {
@@ -296,7 +296,7 @@
             is24=false;
         }
         document.getElementById("formatbtn").innerHTML = "Format: "+(is24 ? "24 Hour" : "12 Hour");
-        localStorage.setItem("Format",is24);
+        localStorage.setItem("Format",is24.toString());
     }
     </script>
 </body>
