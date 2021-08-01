@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>[ c l o c k ]</title>
-    <link rel="icon" id="dynamic-favicon" href="ico.png">
+    <link rel="icon" id="dynamic-favicon" href="icons/Charcoal.png">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=DotGothic16&family=Lora&family=Fredoka+One&display&family=Roboto&family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -15,6 +15,8 @@
         color:rgb(227, 224, 222);
         text-shadow:var(--shadow-depth) var(--shadow-depth) rgba(227, 224, 222, 0.4);
         font-family: 'Roboto Mono', monospace;
+        background-position: center;
+        background-size: cover;
     }
     #m {
         font-size:60px;
@@ -64,6 +66,9 @@
         -o-transition: transform 400ms ease-out;
         transition: transform 400ms ease-out;
     }
+    #wallpaperupload {
+        display:none;
+    }
     ::selection {
         color:invert;
         background-color:rgba(0,0,0,0.35);
@@ -80,42 +85,54 @@
     <div id="sd">
     <t id="a">∧</t>
     <br>
-    <div class="s"><t id="fontbtn" onclick="updateFonts()">Font: </t></div>
-    <div class="s"><t id="themebtn" onclick="updateColors()">Theme: </t></div>
-    <div class="s"><t id="shadowbtn" onclick="updateShadows()">Shadow: </t></div>
     <div class="s"><t id="schoolbtn" onclick="updateSchools()">School: </t></div>
     <div class="s"><t id="schedulebtn" onclick="updateSchedule()">Schedule: </t></div>
     <div class="s"><t id="bellbtn" onclick="updateBell()">Bell: </t></div>
+    <div class="s"><t id="formatbtn" onclick="updateFormat()">Format: </t></div>
+    <div class="s"><t id="fontbtn" onclick="updateFonts()">Font: </t></div>
+    <div class="s"><t id="themebtn" onclick="updateColors()">Theme: </t></div>
+    <div class="s"><t id="shadowbtn" onclick="updateShadows()">Shadow: </t></div>
+    <div class="s"><t id="wallpaperbtn" onclick="document.getElementById('wallpaperupload').click()">Set Wallpaper</t></div>
+    <input onchange="updateWallpaper(this)" type="file" accept="image/png, image/gif, image/jpeg" id="wallpaperupload">
     </div>
     <script src="ccapi.js"></script>
     <script src="holders.js"></script>
     <script>
-    //setup
-    // RV {"2020-2021":{"Sunday":[{"name":"Home","start":"0:00","end":"24:60"}],"Monday":[{"name":"Home","start":"0:00","end":"7:10"},{"name":"Health Screening","start":"7:10","end":"7:40"},{"name":"Block 2","start":"7:40","end":"9:30"},{"name":"Block 4","start":"9:40","end":"11:30"},{"name":"Block 6","start":"11:40","end":"13:30"},{"name":"Lunch","start":"13:30","end":"14:00"},{"name":"Home","start":"14:00","end":"24:60"}],"Tuesday":[{"name":"Home","start":"0:00","end":"7:10"},{"name":"Health Screening","start":"7:10","end":"7:40"},{"name":"Block 1","start":"7:40","end":"9:30"},{"name":"Block 3","start":"9:40","end":"11:30"},{"name":"Block 5","start":"11:40","end":"13:30"},{"name":"Lunch","start":"13:30","end":"14:00"},{"name":"Home","start":"14:00","end":"24:60"}],"Wednesday":[{"name":"Home","start":"0:00","end":"7:10"},{"name":"Health Screening","start":"7:10","end":"7:40"},{"name":"Block 2","start":"7:40","end":"9:30"},{"name":"Block 4","start":"9:40","end":"11:30"},{"name":"Block 6","start":"11:40","end":"13:30"},{"name":"Lunch","start":"13:30","end":"14:00"},{"name":"Home","start":"14:00","end":"24:60"}],"Thursday":[{"name":"Home","start":"0:00","end":"7:10"},{"name":"Health Screening","start":"7:10","end":"7:40"},{"name":"Block 1","start":"7:40","end":"9:30"},{"name":"Block 3","start":"9:40","end":"11:30"},{"name":"Block 5","start":"11:40","end":"13:30"},{"name":"Lunch","start":"13:30","end":"14:00"},{"name":"Home","start":"14:00","end":"24:60"}],"Friday":[{"name":"Home","start":"0:00","end":"7:40"},{"name":"Asynchronous Learning","start":"7:40:14:00"},{"name":"Home","start":"14:00","end":"24:60"}],"Saturday":[{"name":"Home","start":"0:00","end":"24:60"}]}}
-    // ArvadaHS {"2020-2021":{"Sunday":[{"name":"Home","start":"0:00","end":"24:60"}],"Monday":[{"name":"Home","start":"0:00","end":"8:05"},{"name":"Period 1","start":"8:05","end":"9:25"},{"name":"Period 3","start":"9:30","end":"10:55"},{"name":"Period 5","start":"11:00","end":"12:20"},{"name":"Period 7","start":"12:25","end":"13:45"},{"name":"Lunch","start":"13:45","end":"14:15"},{"name":"Access","start":"14:20","end":"15:05"},{"name":"Home","start":"15:05","end":"24:60"}],"Tuesday":[{"name":"Home","start":"0:00","end":"8:05"},{"name":"Period 2","start":"8:05","end":"9:25"},{"name":"Cap/Adv","start":"9:30","end":"10:55"},{"name":"Period 4","start":"11:00","end":"12:20"},{"name":"Period 6","start":"12:25","end":"13:45"},{"name":"Lunch","start":"13:45","end":"14:15"},{"name":"Access","start":"14:20","end":"15:05"},{"name":"Home","start":"15:05","end":"24:60"}],"Wednesday":[{"name":"Home","start":"0:00","end":"8:05"},{"name":"Period 1","start":"8:05","end":"9:25"},{"name":"Period 3","start":"9:30","end":"10:55"},{"name":"Period 5","start":"11:00","end":"12:20"},{"name":"Period 7","start":"12:25","end":"13:45"},{"name":"Lunch","start":"13:45","end":"14:15"},{"name":"Access","start":"14:20","end":"15:05"},{"name":"Home","start":"15:05","end":"24:60"}],"Thursday":[{"name":"Home","start":"0:00","end":"8:05"},{"name":"Period 2","start":"8:05","end":"9:25"},{"name":"Cap/Adv","start":"9:30","end":"10:55"},{"name":"Period 4","start":"11:00","end":"12:20"},{"name":"Period 6","start":"12:25","end":"13:45"},{"name":"Lunch","start":"13:45","end":"14:15"},{"name":"Access","start":"14:20","end":"15:05"},{"name":"Home","start":"15:05","end":"24:60"}],"Friday":[{"name":"Home","start":"0:00","end":"8:05"},{"name":"Period 1","start":"8:05","end":"8:55"},{"name":"Period 2","start":"8:55","end":"9:50"},{"name":"Period 3","start":"9:50","end":"10:45"},{"name":"Period 4","start":"10:45","end":"11:50"},{"name":"Lunch","start":"11:50","end":"12:20"},{"name":"Period 5","start":"12:20","end":"13:15"},{"name":"Period 6","start":"13:15","end":"14:10"},{"name":"Period 7","start":"14:10","end":"15:05"},{"name":"Home","start":"15:05","end":"24:60"}],"Saturday":[{"name":"Home","start":"0:00","end":"24:60"}]}}
-    // AWHS {"2020-2021":{"Sunday":[{"name":"At home","start":"0:00","end":"24:60"}],"Monday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"1st period","start":"7:45","end":"9:05"},{"name":"3rd period","start":"9:10","end":"10:35"},{"name":"5th period","start":"10:40","end":"12:00"},{"name":"7th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Tuesday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"2nd period","start":"7:45","end":"9:05"},{"name":"4th period","start":"9:10","end":"10:35"},{"name":"6th period","start":"10:40","end":"12:00"},{"name":"8th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Wednesday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"1st period","start":"7:45","end":"9:05"},{"name":"3rd period","start":"9:10","end":"10:35"},{"name":"5th period","start":"10:40","end":"12:00"},{"name":"7th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Thursday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"2nd period","start":"7:45","end":"9:05"},{"name":"4th period","start":"9:10","end":"10:35"},{"name":"6th period","start":"10:40","end":"12:00"},{"name":"8th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Friday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"1st Asynchronous","start":"7:45","end":"8:35"},{"name":"2nd Asynchronous","start":"8:40","end":"9:30"},{"name":"3rd Asynchronous","start":"9:35","end":"10:25"},{"name":"4th Asynchronous","start":"10:30","end":"11:20"},{"name":"5th Asynchronous","start":"11:25","end":"12:15"},{"name":"6th Asynchronous","start":"12:20","end":"13:10"},{"name":"7th Asynchronous","start":"13:15","end":"14:05"},{"name":"8th Asynchronous","start":"14:10","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Saturday":[{"name":"At home","start":"0:00","end":"24:60"}]}}
-    // Pomona {"2020-2021":{"Sunday":[{"name":"Home","start":"0:00","end":"24:60"}],"Monday":[{"name":"Screening","start":"7:15","end":"8:00"},{"name":"1st","start":"8:00","end":"9:20"},{"name":"2nd","start":"9:25","end":"10:45"},{"name":"3rd","start":"10:50","end":"12:10"},{"name":"4th","start":"12:15","end":"13:35"},{"name":"Lunch","start":"13:40","end":"14:15"},{"name":"Online Support","start":"14:15","end":"15:00"}],"Tuesday":[{"name":"Screening","start":"7:15","end":"8:00"},{"name":"5th","start":"8:00","end":"9:20"},{"name":"6th","start":"9:25","end":"10:45"},{"name":"7th","start":"10:50","end":"12:10"},{"name":"4th","start":"12:15","end":"12:45"},{"name":"Virtual Partner Time","start":"13:30","end":"15:00"}],"Wednesday":[{"name":"Screening","start":"7:15","end":"8:00"},{"name":"1st","start":"8:00","end":"9:20"},{"name":"2nd","start":"9:25","end":"10:45"},{"name":"3rd","start":"10:50","end":"12:10"},{"name":"4th","start":"12:15","end":"13:35"},{"name":"Lunch","start":"13:40","end":"14:15"},{"name":"Online Support","start":"14:15","end":"15:00"}],"Thursday":[{"name":"Screening","start":"7:15","end":"8:00"},{"name":"5th","start":"8:00","end":"9:20"},{"name":"6th","start":"9:25","end":"10:45"},{"name":"7th","start":"10:50","end":"12:10"},{"name":"4th","start":"12:15","end":"12:45"},{"name":"Virtual Partner Time","start":"13:30","end":"15:00"}],"Friday":[{"name":"Period 1","start":"8:00","end":"8:55"},{"name":"Period 2","start":"9:00","end":"9:55"},{"name":"Period 3","start":"10:00","end":"10:55"},{"name":"Period 4","start":"11:00","end":"11:55"},{"name":"Period 5","start":"12:00","end":"12:55"},{"name":"Period 6","start":"13:00","end":"13:55"},{"name":"Period 7","start":"14:00","end":"14:55"}],"Saturday":[{"name":"Home","start":"0:00","end":"24:60"}]}}
-    // RV {"2020-2021":{"Sunday":[{"name":"Home","start":"0:00","end":"24:60"}],"Monday":[{"name":"Home","start":"0:00","end":"7:05"},{"name":"Screening","start":"7:05","end":"7:35"},{"name":"Period 1","start":"7:35","end":"8:55"},{"name":"Period 2","start":"9:00","end":"10:20"},{"name":"Period 3","start":"10:25","end":"11:45"},{"name":"Period 4","start":"11:50","end":"13:10"},{"name":"Lunch","start":"13:15","end":"13:45"},{"name":"Remote/Period 9","start":"13:50","end":"15:00"},{"name":"Home","start":"15:00","end":"24:60"}],"Tuesday":[{"name":"Home","start":"0:00","end":"7:05"},{"name":"Screening","start":"7:05","end":"7:35"},{"name":"Period 5","start":"7:35","end":"8:55"},{"name":"Period 6","start":"9:00","end":"10:20"},{"name":"Period 7","start":"10:25","end":"11:45"},{"name":"Period 8","start":"11:50","end":"13:10"},{"name":"Lunch","start":"13:15","end":"13:45"},{"name":"Remote/Period 9","start":"13:50","end":"15:00"},{"name":"Home","start":"15:00","end":"24:60"}],"Wednesday":[{"name":"Home","start":"0:00","end":"7:05"},{"name":"Screening","start":"7:05","end":"7:35"},{"name":"Period 1","start":"7:35","end":"8:55"},{"name":"Period 2","start":"9:00","end":"10:20"},{"name":"Period 3","start":"10:25","end":"11:45"},{"name":"Period 4","start":"11:50","end":"13:10"},{"name":"Lunch","start":"13:15","end":"13:45"},{"name":"Remote/Period 9","start":"13:50","end":"15:00"},{"name":"Home","start":"15:00","end":"24:60"}],"Thursday":[{"name":"Home","start":"0:00","end":"7:05"},{"name":"Screening","start":"7:05","end":"7:35"},{"name":"Period 5","start":"7:35","end":"8:55"},{"name":"Period 6","start":"9:00","end":"10:20"},{"name":"Period 7","start":"10:25","end":"11:45"},{"name":"Period 8","start":"11:50","end":"13:10"},{"name":"Lunch","start":"13:15","end":"13:45"},{"name":"Remote/Period 9","start":"13:50","end":"15:00"},{"name":"Home","start":"15:00","end":"24:60"}],"Friday":[{"name":"Home","start":"0:00","end":"7:20"},{"name":"Period 1","start":"7:20","end":"8:00"},{"name":"Period 2","start":"8:00","end":"8:40"},{"name":"Period 3","start":"8:40","end":"9:20"},{"name":"Period 4","start":"9:20","end":"10:00"},{"name":"Period 5","start":"10:00","end":"10:40"},{"name":"Period 6","start":"10:40","end":"11:20"},{"name":"Period 7","start":"11:20","end":"12:00"},{"name":"Period 8","start":"12:00","end":"12:40"},{"name":"Lunch","start":"12:40","end":"13:10"},{"name":"Remote/Period 9","start":"13:10","end":"15:00"},{"name":"Home","start":"15:00","end":"24:60"}],"Saturday":[{"name":"Home","start":"0:00","end":"24:60"}]}}
+    //init vars
     var api = new ccapi(
-    {"2020-2021":{"Sunday":[{"name":"At home","start":"0:00","end":"24:60"}],"Monday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"1st period","start":"7:45","end":"9:05"},{"name":"3rd period","start":"9:10","end":"10:35"},{"name":"5th period","start":"10:40","end":"12:00"},{"name":"7th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Tuesday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"2nd period","start":"7:45","end":"9:05"},{"name":"4th period","start":"9:10","end":"10:35"},{"name":"6th period","start":"10:40","end":"12:00"},{"name":"8th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Wednesday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"1st period","start":"7:45","end":"9:05"},{"name":"3rd period","start":"9:10","end":"10:35"},{"name":"5th period","start":"10:40","end":"12:00"},{"name":"7th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Thursday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"2nd period","start":"7:45","end":"9:05"},{"name":"4th period","start":"9:10","end":"10:35"},{"name":"6th period","start":"10:40","end":"12:00"},{"name":"8th period","start":"12:05","end":"13:25"},{"name":"Lunch","start":"13:25","end":"13:55"},{"name":"Advisement","start":"13:55","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Friday":[{"name":"At home","start":"0:00","end":"7:45"},{"name":"1st Asynchronous","start":"7:45","end":"8:35"},{"name":"2nd Asynchronous","start":"8:40","end":"9:30"},{"name":"3rd Asynchronous","start":"9:35","end":"10:25"},{"name":"4th Asynchronous","start":"10:30","end":"11:20"},{"name":"5th Asynchronous","start":"11:25","end":"12:15"},{"name":"6th Asynchronous","start":"12:20","end":"13:10"},{"name":"7th Asynchronous","start":"13:15","end":"14:05"},{"name":"8th Asynchronous","start":"14:10","end":"15:00"},{"name":"At home","start":"15:00","end":"24:60"}],"Saturday":[{"name":"At home","start":"0:00","end":"24:60"}]}},
-    "2020-2021"
+    {"2021-2022":{"Sunday":[{"name":"Loading...","start":"0:00","end":"24:60"}],"Monday":[{"name":"Loading...","start":"0:00","end":"24:60"}],"Tuesday":[{"name":"Loading...","start":"0:00","end":"24:60"}],"Wednesday":[{"name":"Loading...","start":"0:00","end":"24:60"}],"Thursday":[{"name":"Loading...","start":"0:00","end":"24:60"}],"Friday":[{"name":"Loading...","start":"0:00","end":"24:60"}],"Saturday":[{"name":"Loading...","start":"0:00","end":"24:60"}]}},
+    "2021-2022"
     );
+    let keylog = "";
+    var fontkey = ["Mono","Pixely","Serif","Sans-Serif","Handwriting","Cookie"];
+    var fonts = {"Mono": "'Roboto Mono', monospace","Pixely": "'DotGothic16', sans-serif","Serif": "'Lora', serif","Sans-Serif": "'Roboto', sans-serif","Handwriting": "'Amatic SC', cursive","Cookie":"'Fredoka One', cursive"};
+    var themekey = ["Chalkboard","Polar","Dust","Bionicle","Dark Oak","Banana","Shrub","Blue Raspberry","Grape","Leather"];
+    var themes = {"Chalkboard":{"bgc":"34, 34, 36","tc":"227, 224, 222"},"Polar":{"bgc":"254, 253, 252","tc":"153, 138, 138"},"Dust":{"bgc":"192, 198, 202","tc":"129, 127, 125"},"Bionicle":{"bgc":"21, 25, 28","tc":"213, 53, 61"},"Dark Oak":{"bgc":"50, 26, 4","tc":"255, 132, 12"},"Banana":{"bgc":"255, 235, 84","tc":"46, 48, 54"},"Shrub":{"bgc":"41, 96, 87","tc":"17, 190, 34"},"Blue Raspberry":{"bgc":"7, 102, 140","tc":"101, 223, 235"},"Grape":{"bgc":"53, 42, 86","tc":"142, 131, 198"},"Leather":{"bgc":"80, 60, 42","tc":"173, 144, 92"}};
+    var shadowkey = ["2px","4px","8px","0px"];
+    var schoolkey = ["Arvada West HS","Arvada HS","Ralston Valley HS","Pomona HS","Manning MS","Everitt MS","Moore MS","Oberon MS","Drake MS","North Arvada MS"];
+    var schedulekey = [];
+    var format = "";
+    var formatkey = ["p","m","p"];
+    var formats = ["12 Hour","24 Hour"];
+    var bell = new Audio('bell.mp3');
+    var bellShouldPlay;
+    //collect cookies
     setTimeout(function(){
         updateColors(getCookie("Theme"));
         updateFonts(getCookie("Font"));
         updateShadows(getCookie("Shadow"));
         updateSchools(getCookie("School"));
         updateBell(getCookie("Bell"));
+        updateFormat(getCookie("Format"));
+        updateWallpaper(getCookie("Wallpaper"));
     },100); //needs to wait for json to load, for some reason
-    var bell = new Audio('bell.mp3');
-    var bellShouldPlay;
     
     update();
     setInterval(update,200);
-    function update() { //update time
+    function update() { //update time and classes
         // current
         api.updateTime();
-        let timet = "It's "+api.getTime("p")+", "+api.getDate();
+        let timet = "It's "+api.getTime(format)+", "+api.getDate();
         if (timet!=document.getElementById("m").innerHTML) {
             document.getElementById("m").innerHTML=timet;
         }
@@ -133,7 +150,7 @@
             bell.play();
         }
     }
-    
+    //drawer
     document.getElementById("a").addEventListener("mousedown",toggleDrawer);
     document.addEventListener('keydown',function(event){
         if (event.keyCode==32) {
@@ -147,40 +164,7 @@
             document.getElementById("sd").style.transform="translateY(calc(30vh - 40px))";
         }
     }
-    
-    var fontkey = ["Mono","Pixely","Serif","Sans-Serif","Handwriting","Cookie"];
-    var fonts = {"Mono": "'Roboto Mono', monospace","Pixely": "'DotGothic16', sans-serif","Serif": "'Lora', serif","Sans-Serif": "'Roboto', sans-serif","Handwriting": "'Amatic SC', cursive","Cookie":"'Fredoka One', cursive"};
-    function updateFonts(type) {
-        if (!type) {
-            try{
-            type = fontkey[(fontkey.indexOf(document.getElementById("fontbtn").innerHTML.replace("Font: ",""))+1)%fontkey.length];
-            }catch{type=fontkey[0];}
-        } else if (fontkey.indexOf(type)==-1) { // ok
-            type = fontkey[0];
-        }
-        document.getElementById("fontbtn").innerHTML = "Font: "+type;
-        document.body.style.fontFamily=fonts[type];
-        setCookie("Font",type,180);
-    }
-    
-    var themekey = ["Chalkboard","Polar","Dust","Bionicle","Dark Oak","Banana","Shrub","Blue Raspberry","Grape","Leather"];
-    var themes = {"Chalkboard":{"bgc":"34, 34, 36","tc":"227, 224, 222"},"Polar":{"bgc":"254, 253, 252","tc":"153, 138, 138"},"Dust":{"bgc":"192, 198, 202","tc":"129, 127, 125"},"Bionicle":{"bgc":"21, 25, 28","tc":"213, 53, 61"},"Dark Oak":{"bgc":"50, 26, 4","tc":"255, 132, 12"},"Banana":{"bgc":"255, 235, 84","tc":"46, 48, 54"},"Shrub":{"bgc":"41, 96, 87","tc":"17, 190, 34"},"Blue Raspberry":{"bgc":"7, 102, 140","tc":"101, 223, 235"},"Grape":{"bgc":"53, 42, 86","tc":"142, 131, 198"},"Leather":{"bgc":"80, 60, 42","tc":"173, 144, 92"}};
-    function updateColors(type) {// theme update
-        if (!type) {
-            try{
-            type = themekey[(themekey.indexOf(document.getElementById("themebtn").innerHTML.replace("Theme: ",""))+1)%themekey.length];
-            }catch{type=themekey[0];}
-        } else if (themekey.indexOf(type)==-1) { // ok
-            type = themekey[0];
-        }
-        document.getElementById("themebtn").innerHTML = "Theme: "+type;
-        document.body.style.backgroundColor = "rgb("+themes[type].bgc+")";
-        document.body.style.color = "rgb("+themes[type].tc+")";
-        document.body.style.textShadow = "var(--shadow-depth) var(--shadow-depth) rgba("+themes[type].tc+", 0.4)";
-        document.getElementById('dynamic-favicon').href="icons/"+type.toLowerCase().split(" ").join("-")+".png";
-        setCookie("Theme",type,180);
-    }
-    let keylog = "";
+    //easter eggs
     document.addEventListener("keyup",function(e){ // custom backgrounds
         if (e.key!=" ") {
             keylog+=e.key;
@@ -196,11 +180,55 @@
             } else if (keylog.indexOf("clear")!=-1) {
                 document.body.style.backgroundImage = "";
                 keylog = "";
+            } else if (keylog.indexOf("pixel")!=-1) {
+                document.body.style.imageRendering = "pixelated";
+                keylog = "";
             }
         }
     });
-    
-    var shadowkey = ["2px","4px","8px","0px"];
+    //buttons
+    function updateWallpaper(url) {
+        if (url==document.getElementById('wallpaperupload')) {
+            //convert to dataurl and set
+            const reader = new FileReader();
+            reader.addEventListener("load", function () {
+                document.body.style.backgroundImage = "url("+reader.result+")";
+                setCookie("Wallpaper",reader.result,180);
+            }, false);
+            if (url.files[0]) {
+                reader.readAsDataURL(url.files[0]);
+            }
+        } else if (typeof url=="string" && url.split(0,22)=='data:image/png;base64,') {
+            document.body.style.backgroundImage = "url("+url+")";
+        }
+    }
+    function updateFonts(type) {
+        if (!type) {
+            try{
+            type = fontkey[(fontkey.indexOf(document.getElementById("fontbtn").innerHTML.replace("Font: ",""))+1)%fontkey.length];
+            }catch{type=fontkey[0];}
+        } else if (fontkey.indexOf(type)==-1) { // ok
+            type = fontkey[0];
+        }
+        document.getElementById("fontbtn").innerHTML = "Font: "+type;
+        document.body.style.fontFamily=fonts[type];
+        setCookie("Font",type,180);
+    }
+    function updateColors(type) {// theme update
+        if (!type) {
+            try{
+            type = themekey[(themekey.indexOf(document.getElementById("themebtn").innerHTML.replace("Theme: ",""))+1)%themekey.length];
+            }catch{type=themekey[0];}
+        } else if (themekey.indexOf(type)==-1) { // ok
+            type = themekey[0];
+        }
+        document.getElementById("themebtn").innerHTML = "Theme: "+type;
+        document.body.style.backgroundColor = "rgb("+themes[type].bgc+")";
+        document.body.style.color = "rgb("+themes[type].tc+")";
+        document.body.style.textShadow = "var(--shadow-depth) var(--shadow-depth) rgba("+themes[type].tc+", 0.4)";
+        document.getElementById('dynamic-favicon').href="icons/"+type.split(" ").join("_")+".png";
+        setCookie("Theme",type,180);
+    }
     function updateShadows(type) {// shadow update
         if (!type) {
             try{
@@ -213,8 +241,6 @@
         document.body.style.setProperty('--shadow-depth',type);
         setCookie("Shadow",type,180);
     }
-    
-    var schoolkey = ["Arvada West HS","Arvada HS","Ralston Valley HS","Pomona HS","Manning MS","Everitt MS","Moore MS","Oberon MS","Drake MS","North Arvada MS"];
     function updateSchools(type) {// school update
         if (!type) {
             try{
@@ -229,8 +255,6 @@
         updateSchedule(getCookie("Schedule"));
         setCookie("School",type,180);
     }
-    
-    var schedulekey = [];
     function updateSchedule(type) {// school update
         schedulekey = Object.keys(api.schedule);
         if (!type) {
@@ -255,7 +279,17 @@
         document.getElementById("bellbtn").innerHTML = "Bell: "+(bellShouldPlay ? "On":"Off");
         setCookie("Bell",bellShouldPlay,180);
     }
-    
+    function updateFormat(type) {
+        if (!type) {
+            try {
+            format = formatkey[formatkey.indexOf(format)+1];
+            }catch{format="p";}
+        } else if (formatkey.indexOf(type)==-1) {
+            format="p";
+        }
+        document.getElementById("formatbtn").innerHTML = "Format: "+(formats[formatkey.indexOf(format)]);
+        setCookie("Format",format,180);
+    }
     //cookies
     function getCookie(name) {
         var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
