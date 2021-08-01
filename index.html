@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -93,6 +94,7 @@
     <div class="s"><t id="themebtn" onclick="updateColors()">Theme: </t></div>
     <div class="s"><t id="shadowbtn" onclick="updateShadows()">Shadow: </t></div>
     <div class="s"><t id="wallpaperbtn" onclick="document.getElementById('wallpaperupload').click()">Set Wallpaper</t></div>
+    <div class="s"><t id="wallpaperbtn" onclick="updateWallpaper('')">Remove Wallpaper</t></div>
     <input onchange="updateWallpaper(this)" type="file" accept="image/png, image/gif, image/jpeg" id="wallpaperupload">
     </div>
     <script src="ccapi.js"></script>
@@ -111,9 +113,7 @@
     var shadowkey = ["2px","4px","8px","0px"];
     var schoolkey = ["Arvada West HS","Arvada HS","Ralston Valley HS","Pomona HS","Manning MS","Everitt MS","Moore MS","Oberon MS","Drake MS","North Arvada MS"];
     var schedulekey = [];
-    var format = "";
-    var formatkey = ["p","m","p"];
-    var formats = ["12 Hour","24 Hour"];
+    var is24;
     var bell = new Audio('bell.mp3');
     var bellShouldPlay;
     //collect cookies
@@ -132,7 +132,7 @@
     function update() { //update time and classes
         // current
         api.updateTime();
-        let timet = "It's "+api.getTime(format)+", "+api.getDate();
+        let timet = "It's "+api.getTime(is24 ? "m" : "p")+", "+api.getDate();
         if (timet!=document.getElementById("m").innerHTML) {
             document.getElementById("m").innerHTML=timet;
         }
@@ -200,6 +200,9 @@
             }
         } else if (typeof url=="string" && url.split(0,22)=='data:image/png;base64,') {
             document.body.style.backgroundImage = "url("+url+")";
+        } else if (url=='') {
+            document.body.style.backgroundImage = "";
+            setCookie("Wallpaper",'',180);
         }
     }
     function updateFonts(type) {
@@ -281,14 +284,18 @@
     }
     function updateFormat(type) {
         if (!type) {
-            try {
-            format = formatkey[formatkey.indexOf(format)+1];
-            }catch{format="p";}
-        } else if (formatkey.indexOf(type)==-1) {
-            format="p";
+            if (is24===false) {
+                is24=true;
+            } else {
+                is24=false;
+            }
+        } else if (typeof type == "boolean") {
+            is24=type;
+        } else {
+            is24=false;
         }
-        document.getElementById("formatbtn").innerHTML = "Format: "+(formats[formatkey.indexOf(format)]);
-        setCookie("Format",format,180);
+        document.getElementById("formatbtn").innerHTML = "Format: "+(is24 ? "24 Hour" : "12 Hour");
+        setCookie("Format",is24,180);
     }
     //cookies
     function getCookie(name) {
